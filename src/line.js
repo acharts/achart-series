@@ -57,7 +57,9 @@ Line.ATTRS = {
    * 是否平滑的线
    * @type {Boolean}
    */
-  smooth : false
+  smooth : false,
+  
+  legendType : 'line'
 };
 
 Util.augment(Line,{

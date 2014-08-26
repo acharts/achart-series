@@ -84,7 +84,7 @@ Column.ATTRS = {
   duration : 1000,
   
   item : {
-    'stroke': '#fff',
+    'stroke': 'none',
     'stroke-width': 1,
     'fill-opacity':.75
   }

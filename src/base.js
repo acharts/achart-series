@@ -90,6 +90,11 @@ Series.ATTRS = {
    */
   itemName : 'seriesItem',
   /**
+   * 显示legend的类型，默认是矩形
+   * @type {String}
+   */
+  legendType : 'rect',
+  /**
    * 所属分组的名称,用于事件中标示父元素
    * @protected
    * @type {String}
@@ -336,16 +341,20 @@ Util.augment(Series,{
   findPointByValue : function(value){
     var _self = this,
       points = _self.get('points'),
-      rst;
+      rst,
+      last;
 
     Util.each(points,function(point){
+
       if(_self.snapEqual(point.xValue,value) && point.value != null){
         rst = point;
         return false;
+      }else if(Util.isNumber(value) && point.xValue < value ){
+        last = point;
       }
     });
 
-    return rst;
+    return rst || last;
   },
   /**
    * @protected
