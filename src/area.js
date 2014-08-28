@@ -121,10 +121,12 @@ Util.augment(Area,{
       areaShape = _self.get('areaShape'),
       points = _self.getPoints(),
       path = _self._getAreaPath(points);
-    Util.animPath(areaShape,path);
-
+    if(_self.get('animate')){
+      Util.animPath(areaShape,path);
+    }else{
+      areaShape.attr('path',path);
+    }
   },
-  
   //绘制区域
   drawArea : function(points){
     var _self = this,

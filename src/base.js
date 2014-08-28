@@ -344,16 +344,21 @@ Util.augment(Series,{
       rst,
       last;
 
-    Util.each(points,function(point){
+    Util.each(points,function(point,index){
 
       if(_self.snapEqual(point.xValue,value) && point.value != null){
         rst = point;
         return false;
       }else if(Util.isNumber(value) && point.xValue < value ){
         last = point;
+        next = points[index + 1];
       }
     });
-
+    if(last && next){ //计算最逼近的
+      if(Math.abs(last.xValue - value) > Math.abs(next.xValue - value)){
+        last = next;
+      }
+    }
     return rst || last;
   },
   /**
