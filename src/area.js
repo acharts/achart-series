@@ -223,8 +223,8 @@ Util.augment(Area,{
     var _self = this,
       length = points.length,
       value0 = _self.getBaseValue(),
-      first = _self._getFirstPoint(points),
-      last = _self._getLastPoint(points),
+      first = _self._getFirstPoint(points) || points[0],
+      last = _self._getLastPoint(points) || points[length - 1],
       isInCircle = _self.isInCircle(),
       linePath,
       invert = _self.get('invert'), //是否坐标轴旋转

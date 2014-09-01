@@ -29,6 +29,6 @@
       "sinon" : "1.6.0",
       "jquery" : "1.9.1"
     },
-    "tests": "tests/*-spec.js"
+    "tests": "tests/area-null-spec.js"
   }
 }
