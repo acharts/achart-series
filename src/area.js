@@ -195,13 +195,36 @@ Util.augment(Area,{
     }
     return path;
   },
+  //获取第一个非null节点
+  _getFirstPoint : function(points){
+    var rst = null;
+    Util.each(points,function(point){
+      if(point.value != null){
+        rst = point;
+        return false;
+      }
+    });
+    return rst;
+  },
+  //获取最后一个非null节点
+  _getLastPoint : function(points){
+    var rst = null;
+    for(var i = points.length - 1; i >=0 ; i--){
+      var point = points[i];
+      if(point.value != null){
+        rst = point;
+        break;
+      }
+    }
+    return rst;
+  },
   //点转换成区域的path
   points2area : function(points){
     var _self = this,
       length = points.length,
       value0 = _self.getBaseValue(),
-      first = points[0],
-      last = points[length - 1],
+      first = _self._getFirstPoint(points),
+      last = _self._getLastPoint(points),
       isInCircle = _self.isInCircle(),
       linePath,
       invert = _self.get('invert'), //是否坐标轴旋转
@@ -223,7 +246,7 @@ Util.augment(Area,{
         if(REGEX_MOVE.test(path)){
           path = Util.parsePathString(path);
           var temp = [],
-            preBreak = first;;
+            preBreak = path[0];
           Util.each(path,function(item,index){
             if(index !== 0 && item[0] == 'M'){ //如果遇到中断的点，附加2个点
               var n1 = [],
@@ -236,7 +259,7 @@ Util.augment(Area,{
               n1[2] = value0;
 
               n0[0] = 'L';
-              n0[1] = preBreak.x;
+              n0[1] = preBreak[1];
               n0[2] = value0;
 
               n2[0] = 'M';

@@ -28,6 +28,7 @@
       "achart-axis" : "1.0.0",
       "sinon" : "1.6.0",
       "jquery" : "1.9.1"
-    }
+    },
+    "tests": "tests/*-spec.js"
   }
 }
