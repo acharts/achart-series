@@ -22,6 +22,20 @@ function removeLabel(label){
  */
 var Group = function(){
 
+  /**
+   * @event itemselected
+   * 选项激活
+   * @param {Object} ev 事件对象
+   * @param {Object} ev.item 选中的子项
+   */
+  
+
+  /**
+   * @event itemunselected
+   * 选项激活
+   * @param {Object} ev 事件对象
+   * @param {Object} ev.item 取消选中的子项
+   */
 };
 
 Group.ATTRS = {
@@ -97,6 +111,7 @@ Util.augment(Group,{
             _self.setSelected(shape);
           }
         }
+        _self.fire('itemclick',shape);
         _self.fireUpGroup('click',shape);
       }
     });
@@ -140,6 +155,9 @@ Util.augment(Group,{
         }else{
           _self.animateItem(item,prePoint);
         }
+        if(point.obj && point.obj.attrs){
+          item.attr(point.obj.attrs);
+        }
       }
     });
 
@@ -156,7 +174,8 @@ Util.augment(Group,{
     //小于现有的点
     for(var i = length - 1; i >= count; i--){
       var item = items[i];
-      item.remove();
+      //item.remove();
+      _self.removeItem(item);
     }
 
   },
@@ -166,6 +185,7 @@ Util.augment(Group,{
    * 触发选中事件
    */
   onSelected : function(item){
+    this.fire('itemselected',{item:item});
     this.fireUpGroup('selected',item);
   },
   /**
@@ -173,6 +193,7 @@ Util.augment(Group,{
    * 触发移除选中
    */
   onUnSelected : function(item){
+    this.fire('itemunselected',{item:item});
     this.fireUpGroup('unselected',item);
   },
   /**
@@ -281,8 +302,12 @@ Util.augment(Group,{
    * @param  {Object} item 子项
    */
   removeItem : function(item){
-    var _self = this;
+    var _self = this,
+     animHadler = item.get('animHadler');
     _self.removeLabel(item);
+    if(animHadler){
+      Util.stopStep(animHadler);
+    }
     item.remove();
   },
   /**

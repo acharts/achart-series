@@ -717,10 +717,6 @@ Util.augment(Pie,{
         path.push(['z']);
       }
 
-      
-
-
-
     }
     return path;
   },

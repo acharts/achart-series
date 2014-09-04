@@ -126,7 +126,7 @@ Util.augment(Cartesian,{
    * @protected
    * @return {Object} 点的集合
    */
-  getPointByObject : function(item,index){
+  /*getPointByObject : function(item,index){
     var _self = this,
       xField = _self.get('xField'),
       yField = _self.get('yField'),
@@ -138,7 +138,7 @@ Util.augment(Cartesian,{
     point.obj = item; //如果是记录
     
     return point;
-  },
+  },*/
   /**
    * @protected
    * 根据指定的值获取点的信息

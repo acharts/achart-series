@@ -78,6 +78,7 @@ describe('测试序列生成',function(){
     lineActived : {
       'stroke-width': 3
     },
+    animate : false,
     markers : {
       marker : {
         
@@ -165,13 +166,26 @@ describe('测试序列生成',function(){
 
     });
     it('测试区域',function(){
-
+      var areaShape = series.get('areaShape');
+      expect(areaShape).not.to.be(undefined);
+      expect(areaShape.getPath().length).to.be(series.get('data').length + 3);
     });
 
   });
 
   describe('测试操作',function(){
 
+    it('change data',function(done){
+      var data = [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3];
+      series.changeData(data,true);
+      setTimeout(function(){
+        expect(series.get('lineShape').getPath().length).to.be(data.length);
+
+        expect(series.get('areaShape').getPath().length).to.be(series.get('data').length + 3);
+        done();
+      },500)
+      
+    });
     it('隐藏',function(){
       series.hide();
       expect(series.get('node').style.display).to.be('none');

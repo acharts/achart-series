@@ -41,7 +41,7 @@ var Area = function(cfg){
 };
 
 Area.ATTRS = {
-
+  elCls : 'x-chart-area-series',
   /**
    * 区域的配置信息
    * @type {Object}

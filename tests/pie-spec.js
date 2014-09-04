@@ -1,17 +1,18 @@
 var expect = require('expect.js'),
     sinon = require('sinon'),
     PlotRange = require('achart-plot').Range,
+    Simulate = require('event-simulate'),
     $ = require('jquery');
     
 var Canvas = require('achart-canvas'),
   Series = require('../src/pie')
 
-  $('<div id="c1"></div>').prependTo('body');
+  $('<div id="p1"></div>').prependTo('body');
 
 describe('测试序列生成',function(){
 
   var canvas = new Canvas({
-    id : 'c1',
+    id : 'p1',
     width : 900,
     height : 500
   });
@@ -22,7 +23,7 @@ describe('测试序列生成',function(){
 
   group.set('plotRange',plotRange);
 
-  var series = group.addGroup(Series,{
+  var pie = group.addGroup(Series,{
     autoPaint : false,
     allowPointSelect : true,
     labels : {
@@ -53,35 +54,201 @@ describe('测试序列生成',function(){
     ]
   });
 
-  series.paint();
+  pie.paint();
 
-  var itemGroup = series.get('group');
+  var itemGroup = pie.get('group');
 
-  describe('pie create',function(){
-    it('create',function(){
-      expect(itemGroup).not.to.be(undefined);
-    });
 
-    it('pie items',function(){
-      expect(itemGroup.getCount()).to.be(series.get('data').length)
-    });
+  describe('测试饼图',function(){
 
-    it('labels,line',function(){
+    it('生成饼图',function(done){
+      setTimeout(function(){
+        expect(pie).not.to.be(undefined);
+        expect(pie.get('node')).not.to.be(undefined);
+        done();
+      },1000);
       
     });
+    it('生成label',function(){
+      var labels = pie.get('labelsGroup');
+      expect(labels.getCount()).to.be(pie.get('data').length);
+    });
+
+    it('点击选中饼图',function(done){
+      var first = pie.getItems()[0];
+      Simulate.simulate(first.get('node'),'click');
+      setTimeout(function(){
+        expect(first.get('selected')).to.be(true);
+        done();
+      },600);
+
+    });
+
+    it('点击其他',function(done){
+      var first = pie.getItems()[0],
+        second = pie.getItems()[1];
     
+      Simulate.simulate(second.get('node'),'click');
+      setTimeout(function(){
+        expect(first.get('selected')).to.be(false);
+        expect(second.get('selected')).to.be(true);
+        done();
+      },600);
+    });
+
+    it('点击取消',function(done){
+      var second = pie.getItems()[1];
+
+      Simulate.simulate(second.get('node'),'click');
+
+      setTimeout(function(){
+        expect(second.get('selected')).to.be(false);
+        done();
+      },500);
+    });
+  });
+
+  describe('测试触发的事件',function(){
+    var items = pie.getItems(),
+    
+    unActiveFn = sinon.spy();
+
+    it('触发actived',function(done){
+      var first = items[0],
+        callback = sinon.spy();
+      pie.on('itemactived',callback);
+
+      Simulate.simulate(first.get('node'),'mouseover');
+
+      setTimeout(function(){
+        var info = pie.getTrackingInfo();
+        expect(info.name).to.be(first.get('name'));
+        expect(first.get('actived')).to.be(true);
+        expect(callback.called).to.be(true);
+
+        pie.off('itemactived',callback);
+        done();
+      },500);
+      
+    });
+    it('触发unactived',function(done){
+      var first = items[0],
+        second = items[1],
+        callback = sinon.spy();
+      pie.on('itemunactived',callback);
+      Simulate.simulate(second.get('node'),'mouseover');
+
+      setTimeout(function(){
+        expect(first.get('actived')).to.be(false);
+        expect(second.get('actived')).to.be(true);
+
+        pie.off('itemunactived',callback);
+        done();
+      },500);
+    });
+
+    it('触发click,触发选中',function(done){
+      var first = items[0],
+        callback = sinon.spy(),
+        selCallback = sinon.spy();
+      pie.on('itemclick',callback);
+      pie.on('itemselected',selCallback);
+      Simulate.simulate(first.get('node'),'click');
+
+      setTimeout(function(){
+        expect(callback.called).to.be(true);
+         expect(selCallback.called).to.be(true);
+        pie.off('itemclick',callback);
+        pie.off('itemselected',selCallback);
+        done();
+      },500);
+    });
+
+    it('触发取消选中',function(done){
+      var first = items[0],
+        callback = sinon.spy();
+      pie.on('itemunselected',callback);
+
+      Simulate.simulate(first.get('node'),'click');
+
+      setTimeout(function(){
+        expect(callback.called).to.be(true);
+        pie.off('itemunselected',callback);
+        done();
+      },500);
+    });
   });
 
   describe('operation',function(){
 
-    it('change',function(){
+    it('change distance',function(done){
+      var labels = pie.get('labelsGroup'),
+        firstLabel = labels.getFirst(),
+        x = firstLabel.attr('x');
+      expect(firstLabel.attr('text-anchor')).to.be('end');
 
+      pie.get('labelsGroup').set('distance',-20);
+      pie.repaint();
+      setTimeout(function(){
+        var cLabel = labels.getFirst();
+        expect(cLabel.attr('x')).not.to.be(x);
+        expect(cLabel.attr('text-anchor')).to.be('end');
+        expect(cLabel.attr('transform').length).not.to.be(0);
+        done();
+      },800);
     });
 
-    it('item click',function(){
+    it('change',function(done){
+      var data = [
+        ['Firefox',   45.0],
+        ['Safari',    8.5],
+        ['Opera',     6.2],
+        ['Others',   0.7],
+        {
+            name: 'Chrome',
+            y: 12.8,
+            sliced: true,
+            attrs : {
+              fill : '#cccccc'
+            },
+            selected: true
+        }
+      ];
+
+      pie.set('animate',true);
+
+      pie.changeData(data,true);
+      setTimeout(function(){
+        expect(itemGroup.getCount()).to.be(data.length);
+        var last = itemGroup.getLast();
+        expect(last.attr('fill')).to.be('#cccccc');
+        done();
+      },800);
 
     });
     
+    it('add',function(done){
+      var count = itemGroup.getCount();
+
+      pie.addPoint(['ie',20],false,true);
+      setTimeout(function(){
+        expect(itemGroup.getCount()).to.be(count + 1);
+        done();
+      },800);
+    });
+
+    it('remove',function(done){
+      var data = pie.get('data'),
+        count = itemGroup.getCount();
+
+      data.pop();
+      pie.repaint();
+
+       setTimeout(function(){
+        expect(itemGroup.getCount()).to.be(count - 1);
+        done();
+      },800);
+    });
   });
 
 });

@@ -27,8 +27,9 @@
       "achart-canvas" : "1.0.0",
       "achart-axis" : "1.0.0",
       "sinon" : "1.6.0",
+      "event-simulate" : "1.0.0",
       "jquery" : "1.9.1"
     },
-    "tests": "tests/area-null-spec.js"
+    "tests": "tests/*-spec.js"
   }
 }

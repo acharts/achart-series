@@ -150,7 +150,7 @@ Util.augment(Series,{
       _self.set('data',data);
     }
     if(redraw){
-      if(parent){
+      if(parent && parent.repaint){
         parent.repaint();
       }else if(_self.get('visible')){
         _self.repaint();
@@ -165,24 +165,29 @@ Util.augment(Series,{
    */
   addPoint : function(point,shift,redraw){
     var _self = this,
-      data = _self.get('data');
+      data = _self.get('data'),
+      animate = _self.get('animate');
     data.push(point);
-    
-    if(shift){
-      data.shift();
-      redraw && data.unshift(data[0]);
-    }
-    _self.changeData(data,redraw);
 
     if(shift){
-      setTimeout(function(){
-        data.shift();
-        _self.set('points',null);
-        if(redraw){
-          _self.shiftPoint();
-          _self.changeShapes(_self.getPoints(),false);
-        }
-      },800);
+      data.shift();
+    }
+    if(!animate){ //没有动画时
+      _self.changeData(data,redraw);
+    }else{ //存在动画时
+      if(shift && redraw){
+        data.unshift(data[0]);
+      }
+      _self.changeData(data,redraw);
+      if(shift && redraw){
+        setTimeout(function(){
+            data.shift();
+            _self.set('points',null);
+            _self.shiftPoint();
+            _self.repaint();
+
+        },800);
+      }
       
     }
   },
@@ -468,6 +473,9 @@ Util.augment(Series,{
       markersGroup;
     if(markers){
       var cfg = Util.mix({},markers);
+      if(cfg.animate == null){
+        cfg.animate = _self.get('animate');
+      }
       cfg.invert = _self.get('invert');
       markersGroup = _self.addGroup(Markers,cfg);
       _self.set('markersGroup',markersGroup);

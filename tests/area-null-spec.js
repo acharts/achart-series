@@ -9,12 +9,12 @@ var Canvas = require('achart-canvas'),
   NAxis = Axis.Number,
   CAxis = Axis.Time;
 
-$('<div id="a1"></div>').prependTo('body');
+$('<div id="an1"></div>').prependTo('body');
 
 describe('area null points',function(){
 
   var canvas = new Canvas({
-    id : 'a1',
+    id : 'an1',
     width : 900,
     height : 500
   });
