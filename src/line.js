@@ -104,10 +104,15 @@ Util.augment(Line,{
     var _self = this,
       //points = _self.getPoints(),
       lineShape = _self.get('lineShape'),
+      trackerShape = _self.get('trackerShape'),
       path = _self.points2path(points);
 
     if(animate == null){
       animate = _self.get('animate');
+    }
+    if(trackerShape){
+      var tracePath = _self.points2tracker(points);
+      trackerShape.attr('path',tracePath);
     }
     if(lineShape){
       if(animate){
