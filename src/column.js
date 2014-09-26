@@ -74,7 +74,7 @@ Column.ATTRS = {
    * 是否允许取消选中，选中状态下，继续点击则会取消选中
    * @type {Boolean}
    */
-  cancelSelect : 'false',
+  cancelSelect : false,
   /**
    * 发生层叠时，层叠之间的间距
    * @type {Object}
@@ -165,7 +165,7 @@ Util.augment(Column,{
     var _self = this,
       curIndex,
       xAxis = _self.get('xAxis'),
-      tickLength = xAxis.getTickAvgLength(),
+      tickLength = _self._getAvgLength(),
       count,
       margin = 10,
       width,
@@ -181,6 +181,21 @@ Util.augment(Column,{
     _self.set('columnWidth',width);
     _self.set('columnOffset',offset)
 
+  },
+  _getAvgLength : function(){
+    var _self = this,
+      xAxis = _self.get('xAxis'),
+      type = xAxis.get('type'),
+      avgLength,
+      data = _self.get('data');
+
+    if(type != 'time' && type != 'number'){
+      avgLength = xAxis.getTickAvgLength();
+    }else{
+      var length = xAxis.getLength();
+      avgLength = length / data.length;
+    }
+    return avgLength;
   },
   //获取index相关信息
   _getIndexInfo : function(){

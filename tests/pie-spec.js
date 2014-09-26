@@ -122,7 +122,7 @@ describe('测试序列生成',function(){
 
       setTimeout(function(){
         var info = pie.getTrackingInfo();
-        expect(info.name).to.be(first.get('name'));
+        //expect(info.name).to.be(first.get('name'));
         expect(first.get('actived')).to.be(true);
         expect(callback.called).to.be(true);
 

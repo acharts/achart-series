@@ -143,6 +143,18 @@ Util.augment(Line,{
       path = '';
 
     if(!animate){
+      drawLine();
+    }else{
+      lineShape = _self._createLine(path);
+      if(_self.isInCircle()){
+        _self.circleAnimate(points,lineShape);
+      }else{
+        _self.animateClip(drawLine,after);
+      }
+      
+    }
+
+    function drawLine(){
       path = _self.points2path(points);
       lineShape = _self._createLine(path);
       Util.each(points,function(point){
@@ -151,41 +163,7 @@ Util.augment(Line,{
 
       _self.drawInner(points);
       after();
-    }else{
-      lineShape = _self._createLine(path);
-      if(_self.isInCircle()){
-        _self.circleAnimate(points,lineShape);
-      }else{
-        var cur = 0,
-          sub = [],
-          count = points.length;
-
-        //动画生成线和对应的点
-        Util.animStep(duration,function(factor){
-          var pre = cur;
-          cur = parseInt((factor) * count,10);
-          if(cur > count - 1){
-            cur = count - 1;
-          }
-          
-          if(cur != pre){
-            sub = points.slice(0,cur + 1);
-            path = _self.points2path(sub);
-            lineShape.attr('path',path);
-            _self.drawInner(sub);
-            for(var i = pre; i< cur; i++){
-              _self._drawPoint(points[i]);
-            }
-            
-          }
-          if(factor == 1){
-            _self._drawPoint(points[cur]);
-          }
-        },after);
-      }
-      
     }
-    //_self.set('lineShape',lineShape);
     /**
      * @private
      */
@@ -230,6 +208,9 @@ Util.augment(Line,{
   //绘制节点相关的label,marker
   _drawPoint : function(point){
     var _self = this;
+    if(point.value == null){
+      return;
+    }
     if(_self.get('markers') && !_self.get('markersGroup').get('single')){ //如果只有一个marker暂时不生成
       _self.addMarker(point);
     }

@@ -111,7 +111,7 @@ Util.augment(Group,{
             _self.setSelected(shape);
           }
         }
-        _self.fire('itemclick',shape);
+        _self.fire('itemclick',{item : shape,point : shape.get('point')});
         _self.fireUpGroup('click',shape);
       }
     });
@@ -185,7 +185,7 @@ Util.augment(Group,{
    * 触发选中事件
    */
   onSelected : function(item){
-    this.fire('itemselected',{item:item});
+    this.fire('itemselected',{item:item,point : item.get('point')});
     this.fireUpGroup('selected',item);
   },
   /**
@@ -193,7 +193,7 @@ Util.augment(Group,{
    * 触发移除选中
    */
   onUnSelected : function(item){
-    this.fire('itemunselected',{item:item});
+    this.fire('itemunselected',{item:item,point : item.get('point')});
     this.fireUpGroup('unselected',item);
   },
   /**

@@ -384,3 +384,100 @@ describe('测试层叠区域图',function(){
   });
 });
 
+
+describe('test time axis',function(){
+  var canvas = new Canvas({
+    id : 'c1',
+    width : 900,
+    height : 500
+  });
+
+  
+
+  var plotRange = {
+      start : {x : 50,y : 400},
+      end : {x : 850, y : 50}
+    },
+    xAxis = canvas.addGroup(Axis.Time,{
+      plotRange : plotRange,
+      startDate : 1264982400000,
+      endDate : 1265068800000,
+      tickInterval : 2 * 3600 * 1000,
+      labels : {
+        label : {
+          y : 12
+        }
+      },
+      tickOffset : 10,
+      formatter : function(val){
+        return new Date(val).getHours();
+      }
+    });
+
+  var yAxis = canvas.addGroup(NAxis,{
+      plotRange : plotRange,
+      line : null,
+      tickLine : null,
+      grid : {
+        line : {
+          stroke : '#c0c0c0'
+        }
+      },
+      title : {
+        text : 'xsxxxxx',
+        font : '16px bold',
+        fill : 'blue',
+        rotate : 90,
+        x : -30
+      },
+      min : -5,
+      max : 40,
+      position:'left',
+      tickInterval : 5,
+      
+      labels : {
+        label : {
+          x : -12
+        }
+      }
+    });
+
+  canvas.sort();
+
+  var group = canvas.addGroup();
+
+  var series = group.addGroup(Series,{
+    xAxis : xAxis,
+    yAxis : yAxis,
+    labels : {
+      label : {
+        y : -15
+      }
+    },
+    autoPaint : false,
+    color : '#2f7ed8',
+    name: 'Africa',
+    pointInterval : 3600 * 1000,
+    pointStart : 1264982400000,
+    data: [34.4, 21.8, {y : 20.1,attrs : {fill : '#ff0000'}}, 20, 19.6, 19.5, 19.1, 18.4, 18,
+        17.3, 16.8, 15, 14.7, 14.5, 13.3, 12.8, 12.4, 11.8,18,20,16,
+        11.7, 11.2],
+    allowPointSelect : true,
+    labels : {
+      label : {
+        rotate : -90,
+        y : 10,
+        'fill' : '#fff',
+        'text-anchor' : 'end',
+        'textShadow': '0 0 3px black',
+        'font-size' : '14px'
+      }
+    }
+  });
+
+  series.paint();
+
+  it('test column width',function(){
+
+  });
+});

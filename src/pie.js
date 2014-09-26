@@ -53,10 +53,10 @@ function resetItem(item,h,endAngle,r,center,isStart,lineHeight){
       //增加5像素，用于连接线
       item.x = center.x + (r + 5) * Math.cos(item.angle * RAD);
       item.y = center.y + (r + 5) * Math.sin(item.angle * RAD);
-      if(innerAngle == 0){
+      //if(innerAngle == 0){
         //item.y = item.y - lineHeight;
-        item["text-anchor"] = "middle";
-      }
+        //item["text-anchor"] = "middle";
+      //}
 }
 
 function alignLables(center,r,arr,endAngle,factor,lineHeight){
@@ -207,11 +207,17 @@ Pie.ATTRS = {
    */
   labelHeight : 16,
 
+  /**
+   * 是否显示文本的连接线
+   * @type {Boolean}
+   */
   labelLine : true,
 
   item : {
     'stroke': '#fff'
   },
+
+  cancelSelect : true,
   
   xField : 'name',
   stickyTracking : false,
@@ -371,7 +377,7 @@ Util.augment(Pie,{
   },
  
   //鼠标移动
-  onMouseOver : function(){
+  bindMouseOver : function(){
     var _self = this;
 
     _self.on('mouseover',function(ev){

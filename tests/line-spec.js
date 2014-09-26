@@ -327,7 +327,7 @@ describe('测试序列生成',function(){
       },800);
     });
   });
-
+  
 });
 
 
@@ -631,3 +631,5 @@ describe('time axis',function(){
 
   
 });
+/*
+*/

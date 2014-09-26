@@ -122,23 +122,20 @@ Util.augment(Cartesian,{
     Cartesian.superclass.changeData.call(this,data,redraw);
   },
   /**
-   * 
    * @protected
-   * @return {Object} 点的集合
+   * 传入的数据中是否存在x轴的值，如果不存在则使用index计算
+   * @return {Boolean} 
    */
-  /*getPointByObject : function(item,index){
+  hasXValueInArray : function(){
     var _self = this,
-      xField = _self.get('xField'),
-      yField = _self.get('yField'),
-      point = _self.getPoint(item[xField],item[yField]);
-
-    point.value = item[yField];
-    point.xValue = item[xField];
-    point.yValue = _self.parseYValue(item[yField]);
-    point.obj = item; //如果是记录
-    
-    return point;
-  },*/
+      xAxis = _self.get('xAxis'),
+      type = xAxis.get('type');
+    //如果是时间、数字坐标轴，同时设置了点的间距，不需要数组中存在 x值
+    if((type == 'number' || type == 'time') && _self.get('pointInterval')){
+      return false;
+    }
+    return true;
+  },
   /**
    * @protected
    * 根据指定的值获取点的信息
@@ -155,6 +152,29 @@ Util.augment(Cartesian,{
    */
   parseYValue : function(value){
     return value;
+  },
+  /**
+   * 执行平铺动画，从左到右，从上到下显示图表序列
+   * @param  {Function} fn  执行的函数
+   * @param  {Function} callback 回调
+   */
+  animateClip : function(fn,callback){
+    var _self = this,
+      canvas = _self.get('canvas'),
+      invert = _self.get('invert'),
+      width = canvas.get('width'),
+      duration = _self.get('duration'),
+      height = canvas.get('height'),
+      clip =  invert ? '0,0,' + width + ',0' : '0,0,0,' + height;
+
+    _self.attr('clip-rect',clip);
+    fn && fn();
+    _self.animate({
+      'clip-rect' : '0,0,' + width + ','+height
+    },duration,function(){
+      callback && callback();
+      _self.attr('clip-rect','');
+    }); 
   },
   /**
    * @protected

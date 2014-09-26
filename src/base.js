@@ -101,6 +101,21 @@ Series.ATTRS = {
    */
   groupName : 'series'
 
+  /**
+   * @event beforepaint
+   * 数据序列开始渲染,仅第一次渲染时
+   */
+  
+  /**
+   * @event afterpaint
+   * 数据序列渲染完成,仅第一次渲染时
+   */
+  
+  /**
+   * @event datachange
+   * 数据序列数据发生改变
+   */
+
 };
 
 Util.augment(Series,{
@@ -110,7 +125,7 @@ Util.augment(Series,{
     
     Series.superclass.renderUI.call(_self);
     
-    _self.processColor();
+    _self.processColor(this.get('color'));
     _self.renderLabels();
     _self.renderMarkers();
     if(_self.get('autoPaint')){
@@ -123,10 +138,10 @@ Util.augment(Series,{
     Series.superclass.bindUI.call(_self);
     if(_self.get('enableMouseTracking')){
 
-      _self.onMouseOver();
+      _self.bindMouseOver();
       var parent = _self.get('parent');
       
-      /**/_self.on('mouseover',function(){
+      _self.on('mouseover',function(){
         if(parent.setActivedItem){
           if(!parent.isItemActived(_self)){
             parent.setActivedItem(_self);
@@ -135,12 +150,13 @@ Util.augment(Series,{
       });
     }
     if(!_self.get('stickyTracking')){
-      _self.onMouseOut();
+      _self.bindMouseOut();
     }
   },
   /**
    * 更改数据
    * @param  {Array} data 数据
+   * @param  {Boolean} redraw 是否重绘序列
    */
   changeData : function(data,redraw){
     var _self = this,
@@ -156,6 +172,7 @@ Util.augment(Series,{
         _self.repaint();
       }
     }
+    _self.fire('datachange',{data : data});
   },
   /**
    * 添加数据
@@ -185,7 +202,7 @@ Util.augment(Series,{
             _self.set('points',null);
             _self.shiftPoint();
             _self.repaint();
-
+            _self.fire('datachange',{data : data});
         },800);
       }
       
@@ -228,14 +245,14 @@ Util.augment(Series,{
    * @protected
    * 鼠标进入事件
    */
-  onMouseOver : function(ev){
+  bindMouseOver : function(ev){
     
   },
   /**
    * @protected
    * 鼠标移出
    */
-  onMouseOut : function(ev){
+  bindMouseOut : function(ev){
 
   },
   /**
@@ -248,7 +265,7 @@ Util.augment(Series,{
    * @protected
    * 处理颜色
    */
-  processColor : function(){
+  processColor : function(color){
 
   },
   /**
@@ -292,11 +309,16 @@ Util.augment(Series,{
         }
         point.obj = item;
       }else if(Util.isArray(item)){
-        point = _self.getPointByValue(item[0],item[1]);
+        if(_self.hasXValueInArray()){
+          point = _self.getPointByValue(item[0],item[1]);
+        }else{
+          point = _self.getPointByIndex(item[0],index);
+        }
         point.arr = item;
       }else{
         point = _self.getPointByIndex(item,index);
       }
+      point.name = _self.get('name');
       _self.processPoint(point,index);
       points.push(point);
     });
@@ -305,17 +327,17 @@ Util.augment(Series,{
   },
   /**
    * @protected
+   * 传入的数据中是否存在x轴的值，如果不存在则使用index计算
+   * @return {Boolean} 
+   */
+  hasXValueInArray : function(){
+    return true;
+  },
+  /**
+   * @protected
    * 处理节点，并且添加附加信息
    */
   processPoint : function(point,index){
-
-  },
-  /**
-   * 根据对象获取值
-   * @protected
-   * @return {Object} 点的信息
-   */
-  getPointByObject : function(item){
 
   },
   /**
@@ -377,7 +399,7 @@ Util.augment(Series,{
    * @protected
    * 画对应的图形
    */
-  draw : function(points){
+  draw : function(points,callback){
 
   },
   /**
@@ -391,8 +413,10 @@ Util.augment(Series,{
       return;
     }
     _self.set('painting',true);//正在绘制，防止再绘制过程中触发重绘
+    _self.fire('beforepaint');
     _self.draw(points,function(){
       _self.sort();
+      _self.fire('afterpaint');
     });
     _self.set('isPaint',true);
     _self.set('painting',false);
@@ -423,15 +447,17 @@ Util.augment(Series,{
     }
     _self.changeShapes(points);
     Util.each(points,function(point){
-      if(labels){
-        var item = {};
-        item.text = point.value;
-        item.x = point.x;
-        item.y = point.y;
-        labels.items.push(item);
-      }
-      if(markers){
-        markers.items.push(point);
+      if(point.value != null){
+        if(labels){
+          var item = {};
+          item.text = point.value;
+          item.x = point.x;
+          item.y = point.y;
+          labels.items.push(item);
+        }
+        if(markers){
+          markers.items.push(point);
+        }
       }
     });
 
@@ -449,20 +475,20 @@ Util.augment(Series,{
    * @protected
    * 添加marker配置项
    */
-  addMarker : function(offset){
+  addMarker : function(point){
     var _self = this,
         markersGroup = _self.get('markersGroup'),
         marker = {},
         rst;
     if(markersGroup){
-      marker.x = offset.x;
-      marker.y = offset.y;
-      if(offset.obj && offset.obj.marker){
-        Util.mix(marker,offset.obj.marker);
+      marker.x = point.x;
+      marker.y = point.y;
+      if(point.obj && point.obj.marker){
+        Util.mix(marker,point.obj.marker);
       }
 
      rst = markersGroup.addMarker(marker);
-     rst.set('point',offset);
+     rst.set('point',point);
     }
     return rst;
   },
@@ -488,6 +514,11 @@ Util.augment(Series,{
     if(markers){
       markersGroup = _self.get('markersGroup');
       markersGroup.change(markers.items);
+      var children = markersGroup.get('children');
+
+      Util.each(children,function(item,index){
+        item.set('point',markers.items[index]);
+      });
     }
   },
   _changeLabels : function(){
@@ -500,14 +531,6 @@ Util.augment(Series,{
       markersGroup = _self.get('markersGroup');
 
     markersGroup && markersGroup.remove();
-  },
-  //获取激活的属性
-  getActiveAtrrs : function(){
-
-  },
-  //获取解除激活的属性
-  getUnActiveAttrs : function(){
-
   },
   /**
    * @protected

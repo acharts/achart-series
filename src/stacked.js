@@ -27,7 +27,12 @@ Stacked.ATTRS = {
 };
 
 Util.augment(Stacked,{
-
+  /**
+   * @protected
+   * 处理层叠的点
+   * @param  {Object} point 处理的点
+   * @param  {Number} index 索引
+   */
   processStackedPoint : function(point,index){
     var _self = this,   
       pre = _self.getVisiblePrev(),
