@@ -19,6 +19,10 @@ function removeLabel(label){
 /**
  * @class Chart.Series.ItemGroup
  * 包含数据序列子项的数据序列类,作为一个扩展可以用于柱状图、饼图
+ * 
+ *  - <a href="http://spmjs.io/docs/achart-series/api/itemgroup.html" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/wiki/08-itemgroup.html" target="_blank">wiki</a>
+ *  
  */
 var Group = function(){
 
@@ -144,7 +148,7 @@ Util.augment(Group,{
       var point = points[index],
         prePoint,
         path;
-      if(point){
+      if(point && item.get('visible')){
         prePoint = item.get('point');
         item.set('point',point);
         item.set('prePoint',prePoint);
@@ -167,8 +171,10 @@ Util.augment(Group,{
     //大于现有的点
     for (var i = length; i < count; i++) {
       var shape = _self.addItem(points[i],i);
-
-      length > 1 && animate && _self.animateItem(shape,items[length - 1].get('prePoint'));
+      if(length > 1 ){
+        animate && _self.animateItem(shape,items[items.length - 1].get('prePoint'));
+      }
+      
     }
 
     //小于现有的点

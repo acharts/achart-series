@@ -47,6 +47,10 @@ function getPiePath (startAngle, endAngle,r,ir,circle) {
 /**
  * @class Chart.Series.Column
  * 柱状图
+ * 
+ *  - <a href="http://spmjs.io/docs/achart-series/#Column" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/wiki/05-column.html" target="_blank">wiki</a>
+ *  
  * @extends Chart.Series.Cartesian
  * @mixins Chart.Series.ItemGroup
  */
@@ -189,7 +193,7 @@ Util.augment(Column,{
       avgLength,
       data = _self.get('data');
 
-    if(type != 'time' && type != 'number'){
+    if(type != 'time' && type != 'number' && type != 'timeCategory'){
       avgLength = xAxis.getTickAvgLength();
     }else{
       var length = xAxis.getLength();

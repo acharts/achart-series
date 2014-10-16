@@ -10,6 +10,10 @@ var Util = require('achart-util');
  * @class Chart.Series.Stacked
  * @protected
  * 此类是一个扩展，不应该直接实例化,主要用于区域图，柱状图层叠的场景
+ *
+ *  - <a href="http://spmjs.io/docs/achart-series/latest/api/stacked.html" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/latest/wiki/07-stacked.html" target="_blank">wiki</a>
+ * 
  */
 var Stacked = function(){
 
@@ -116,7 +120,7 @@ Util.augment(Stacked,{
    * 获取提示信息
    * @return {*} 返回显示在上面的文本
    */
-  getTipItem : function(point){
+  getTipInfo : function(point){
     var _self = this,
       stackType = _self.get('stackType');
     if(stackType == 'percent'){

@@ -34,6 +34,10 @@ function pathArray(arr,invert){
 /**
  * @class Chart.Series.Area
  * 区域图的数据序列
+ *
+ *  - <a href="http://spmjs.io/docs/achart-series/#area" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/wiki/04-area.html" target="_blank">wiki</a>
+ *  
  * @extends Chart.Series.Line
  */
 var Area = function(cfg){
@@ -70,9 +74,11 @@ Util.augment(Area,{
     var _self = this,
       canvas = _self.get('canvas'),
       markersGroup = _self.get('markersGroup');
-    if(markersGroup && _self.isStacked()){
-      canvas.get('node').appendChild(markersGroup.get('node'));  
-    }
+    _self.on('afterpaint',function(){
+      if(markersGroup && _self.isStacked()){
+        canvas.get('node').appendChild(markersGroup.get('node'));  
+      }
+    });
   },
   //覆盖隐藏方法，同时隐藏markers
   hide : function(){

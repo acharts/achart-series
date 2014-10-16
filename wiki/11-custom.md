@@ -90,7 +90,13 @@ seajs.use(['index','achart-axis','achart-canvas','achart-plot','achart-util'], f
     renderUI : function(){
       this._sortData(this.get('data'));
       Funnel.superclass.renderUI.call(this);
-      
+      this._initGroup();
+    },
+    //存放漏斗图形的分组
+    _initGroup : function(){
+      var _self = this,
+        group = _self.addGroup();
+      _self.set('group',group);
     },
     //处理节点前，对数据进行排序
     _sortData : function(data){
@@ -132,11 +138,12 @@ seajs.use(['index','achart-axis','achart-canvas','achart-plot','achart-util'], f
     },
     _drawPoint : function(point,index){
       var _self = this,
-        cfg = _self._getItemCfg(point,index);
+        cfg = _self._getItemCfg(point,index),
+        group = _self.get('group');
     
       cfg.path = _self._getItemPath(point,index);
-      _self.addShape('path',cfg);
-      
+      var shape = group.addShape('path',cfg);
+      shape.set('point',point);
       if(_self.get('labels')){
         _self.addLabel(point.xValue,point);
       }

@@ -7,6 +7,7 @@ var
   ItemGroup = require('./itemgroup'),
   ActiveGroup = require('achart-actived').Group,
   Util = require('achart-util'),
+  Legend = require('achart-legend'),
   Base = require('./base');
 
 //决定x坐标
@@ -147,8 +148,13 @@ var RAD = Math.PI / 180,
 /**
  * @class Chart.Series.Pie
  * 饼图数据序列
+ * 
+ *  - <a href="http://spmjs.io/docs/achart-series/#pie" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/wiki/06-pie.html" target="_blank">wiki</a>
+ * 
  * @extends Chart.Series
  * @mixins Chart.Series.ItemGroup
+ * @mixins Chart.Actived.Group
  */
 var Pie = function(cfg){
   Pie.superclass.constructor.call(this,cfg);
@@ -227,7 +233,7 @@ Pie.ATTRS = {
 
 Util.extend(Pie,Base);
 
-Util.mixin(Pie,[ItemGroup,ActiveGroup]);
+Util.mixin(Pie,[ItemGroup,ActiveGroup,Legend.UseLegend]);
 
 Util.augment(Pie,{
 
@@ -257,6 +263,10 @@ Util.augment(Pie,{
         _self.setSelected(selectedPoint);
       }
     }
+    if(!this.get('legedGroup')){
+      this.renderLegend();  
+    }
+   
   },
   /**
    * @protected
@@ -264,13 +274,28 @@ Util.augment(Pie,{
    */
   changeShapes : function(points,animate){
     var _self = this;
-
+    this.set('visiblePoints',null);
+    //
     Util.each(points,function(point,index){
       _self.formatPoint(point,index);
     });
-
+    this.clearSelected();
     _self.changePoints(points);
 
+  },
+  changeData : function(data,redraw){
+    var _self = this,
+    curanimate = _self.get('animate');
+    if(redraw){
+      _self.get('group').clear();
+      _self.set('animate',false);
+    }
+   
+    Pie.superclass.changeData.call(this,data,redraw);
+    if(redraw && _self.get('legend')){
+      _self.resetLegendItems();
+      _self.set('animate',curanimate);
+    }
   },
   //处理labels
   processLabels : function(points){
@@ -288,16 +313,19 @@ Util.augment(Pie,{
       rightArray = [];
 
     Util.each(points,function(point){
-      var cfg = _self._getLabelCfg(point,distance,rAppend);
-      if(distance < 0){
-        labelsGroup.addLabel(cfg);
-      }else{
-        if(cfg.factor > 0){
-          rightArray.push(cfg);
+      if(point.visible){
+        var cfg = _self._getLabelCfg(point,distance,rAppend);
+        if(distance < 0){
+          labelsGroup.addLabel(cfg);
         }else{
-          leftArray.push(cfg);
+          if(cfg.factor > 0){
+            rightArray.push(cfg);
+          }else{
+            leftArray.push(cfg);
+          }
         }
       }
+      
     });
     if(leftArray.length){
       var end;
@@ -321,6 +349,23 @@ Util.augment(Pie,{
       });
     }
     
+  },
+  //覆写 getLengendItems 方法
+  getLengendItems : function(){
+    var _self = this,
+      children = _self.getItems(),
+      items = [];
+    Util.each(children,function(child,i){
+      var item = {
+        name : child.get('point').xValue,
+        color : child.attr('fill'),
+        type : 'rect',
+        item : child
+      };
+      items.push(item);
+    });
+
+    return items;
   },
   /**
    * 设置labels
@@ -551,11 +596,22 @@ Util.augment(Pie,{
   formatPoint : function(point,index){
     var _self = this,
       points = _self.getVisiblePoints(),
-      percent = _self._getPiePercent(point,points),
+      visible = false;
+    Util.each(points,function(item){
+      if(point.xValue == item.xValue){
+        visible = true;
+      }
+    });
+    point.visible = visible;
+    if(!visible){
+      return;
+    }
+    var  percent = _self._getPiePercent(point,points),
       startAngle = _self.get('startAngle'),
       endAngle = _self.get('endAngle'),
       totalAngle = endAngle - startAngle,
       rst = {};
+
     point.percent = percent.percent;
     if(point.obj && point.obj.attrs){
       point.color = point.obj.attrs.fill;
@@ -577,13 +633,23 @@ Util.augment(Pie,{
     var _self = this,
       total = 0,
       pre = 0,
-      curIndex = Util.indexOf(points,point),
+      curIndex = null,
       rst = {};
-    Util.each(points,function(point,index){
-      if(index < curIndex){
-        pre += point.value;
+
+    Util.each(points,function(item,index){
+      if(point.xValue == item.xValue){
+        curIndex = index;
       }
-      total += point.value;
+    });
+
+    Util.each(points,function(item,index){
+      //if(item.visible){
+        if(index < curIndex){
+          pre += item.value;
+        }
+        total += item.value;
+      //}
+      
     });
 
     rst.percent = point.value / total;
@@ -592,20 +658,21 @@ Util.augment(Pie,{
   },
   getVisiblePoints : function(){
     var _self = this,
-      visiblePoints;
+      visiblePoints,
+      points = [],
+      items = _self.getItems();;
 
-    return _self.getPoints();
+    
     //未渲染，则调用初始化时的点信息
-    /*if(!_self.get('isPaint')){
-      
+    if(!_self.get('isPaint') || items.length == 0){
+      return _self.getPoints();
     }
 
     visiblePoints = _self.get('visiblePoints');
     if(visiblePoints){
       return visiblePoints;
     }
-    var points = [],
-      items = _self.getItems();
+    
     Util.each(items,function(item){
       if(item.get('visible')){
         points.push(item.get('point'));
@@ -613,13 +680,14 @@ Util.augment(Pie,{
     });
     _self.set('visiblePoints',points);
     return points;
-    */
+    /**/
   },
   /**
    * 执行单个点的动画
    * @protected
    */
   animateItem : function(item,prePoint){
+
     var _self = this,
       curPoint = item.get('point'),
       startAngle = curPoint.startAngle,
@@ -769,6 +837,19 @@ Util.augment(Pie,{
       },duration);
     }
     item.set('selected',selected);
+  },
+  showChild : function(item){
+    Pie.superclass.showChild.call(this,item);
+    this.repaint();
+  },
+  hideChild : function(item){
+    Pie.superclass.hideChild.call(this,item);
+    this.repaint();
+  },
+  //覆写清空
+  remove : function(){
+    this.removeLegend();
+    AGroup.superclass.remove.call(this);
   }
 });
 

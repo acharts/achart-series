@@ -24,6 +24,10 @@ var
 /**
  * @class Chart.Series.Cartesian
  * 使用坐标轴的数据序列，此类是一个抽象类，不要直接初始化
+ *
+ *  - <a href="http://spmjs.io/docs/achart-series/#Cartesian" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/wiki/02-cartesian.html" target="_blank">wiki</a>
+ *  
  * @extends Chart.Series
  */
 function Cartesian(cfg){

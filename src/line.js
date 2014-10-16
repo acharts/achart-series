@@ -18,6 +18,10 @@ function trySet(obj,name,value){
 /**
  * @class Chart.Series.Line
  * 使用线连接数据的数据图序列
+ * 
+ *  - <a href="http://spmjs.io/docs/achart-series/#line" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/wiki/03-line.html" target="_blank">wiki</a>
+ * 
  * @extends Chart.Series.Cartesian
  */
 function Line(cfg){
@@ -144,10 +148,12 @@ Util.augment(Line,{
 
     if(!animate){
       drawLine();
+      after();
     }else{
       lineShape = _self._createLine(path);
       if(_self.isInCircle()){
         _self.circleAnimate(points,lineShape);
+        after();
       }else{
         _self.animateClip(drawLine,after);
       }
@@ -162,7 +168,7 @@ Util.augment(Line,{
       });
 
       _self.drawInner(points);
-      after();
+      
     }
     /**
      * @private

@@ -9,6 +9,7 @@ var Canvas = require('achart-canvas'),
 
   $('<div id="p1"></div>').prependTo('body');
 
+
 describe('测试序列生成',function(){
 
   var canvas = new Canvas({
@@ -236,19 +237,102 @@ describe('测试序列生成',function(){
         done();
       },800);
     });
-
-    it('remove',function(done){
-      var data = pie.get('data'),
-        count = itemGroup.getCount();
-
-      data.pop();
-      pie.repaint();
-
-       setTimeout(function(){
-        expect(itemGroup.getCount()).to.be(count - 1);
-        done();
-      },800);
-    });
   });
 
 });
+
+
+describe('测试legend',function(){
+
+  var canvas = new Canvas({
+    id : 'p1',
+    width : 900,
+    height : 500
+  });
+
+  var plotRange = new PlotRange({x : 50,y : 400},{x : 850, y : 50});
+
+  var group = canvas.addGroup();
+
+  group.set('plotRange',plotRange);
+
+  var pie = group.addGroup(Series,{
+    autoPaint : false,
+    allowPointSelect : true,
+    legend : {
+      layout : 'vertical',
+      align : 'right'
+    },
+    labels : {
+      distance : 40,
+      label : {
+
+      },
+      renderer : function(value,item){
+          
+          return value + ' ' + (item.point.percent * 100).toFixed(2)  + '%'; 
+      }
+    },
+    name: 'Browser share',
+    animate : true,
+    colors : [ '#5e90c9','#1c2d3f','#a9d052','#a12d2d','#43bbb4','#5a2a94','#fabe3c','#2279dc','#e360e5','#48000c'],
+    data: [
+      ['Firefox',   45.0],
+      ['IE',       26.8],
+      {
+          name: 'Chrome',
+          y: 12.8,
+          sliced: true,
+          selected: true
+      },
+      ['Safari',    8.5],
+      ['Opera',     6.2],
+      ['Others',   0.7]
+    ]
+  });
+
+  pie.paint();
+
+  var itemGroup = pie.get('group'),
+    legendGroup = pie.get('legendGroup').get('itemsGroup');
+
+  describe('legend',function(){
+    it('legend 生成',function(){
+      expect(legendGroup).not.to.be(undefined);
+      expect(legendGroup.getCount()).to.be(itemGroup.getCount());
+    });
+
+    it('点击legend,隐藏对应项',function(done){
+
+      setTimeout(function(){
+        var first = legendGroup.getFirst();
+        Simulate.simulate(first.get('node'),'click');
+        expect(itemGroup.getFirst().get('visible')).to.be(false);
+        done();
+      },1000);
+      
+    });
+
+    it('点击legend,显示对应项',function(done){
+      setTimeout(function(){
+        var first = legendGroup.getFirst();
+        Simulate.simulate(first.get('node'),'click');
+        expect(itemGroup.getFirst().get('visible')).to.be(true);
+        done();
+      },1000);
+    });
+
+    it('数据发生改变',function(done){
+      setTimeout(function(){
+        var data = [
+          ['Safari',    8.5],
+          ['Opera',     6.2],
+          ['Others',   0.7]
+        ];
+        pie.changeData(data,true);
+        done();
+      },1000);
+    });
+  });
+});
+/**/

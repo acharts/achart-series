@@ -12,6 +12,13 @@ var Util = require('achart-util'),
 /**
  * @class Chart.Series
  * 数据序列的基类，是一个抽象类，不能直接实例化
+ *
+ *  - <a href="http://spmjs.io/docs/achart-series/" target="_blank">文档</a>
+ *  - <a href="http://spmjs.io/docs/achart-series/wiki/" target="_blank">wiki</a>
+ *  
+ * @extends Chart.Plot.Item
+ * @mixins Chart.ShowLabels
+ * @mixins Chart.Actived
  */
 var Series = function(cfg){
   Series.superclass.constructor.call(this,cfg);
@@ -318,7 +325,8 @@ Util.augment(Series,{
       }else{
         point = _self.getPointByIndex(item,index);
       }
-      point.name = _self.get('name');
+      point.name = point.name || _self.get('name');
+      point.seriesName =  _self.get('name');
       _self.processPoint(point,index);
       points.push(point);
     });
@@ -361,7 +369,7 @@ Util.augment(Series,{
    * 获取提示信息
    * @return {*} 返回显示在上面的文本
    */
-  getTipItem : function(point){
+  getTipInfo : function(point){
     return point.value;
   },
   //根据x轴上的值获取y轴上的值
