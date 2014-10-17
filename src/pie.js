@@ -354,12 +354,13 @@ Util.augment(Pie,{
   getLengendItems : function(){
     var _self = this,
       children = _self.getItems(),
+      legendType = _self.get('legendType') || 'rect',
       items = [];
     Util.each(children,function(child,i){
       var item = {
         name : child.get('point').xValue,
         color : child.attr('fill'),
-        type : 'rect',
+        type : legendType,
         item : child
       };
       items.push(item);
