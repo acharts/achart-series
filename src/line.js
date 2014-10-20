@@ -146,7 +146,7 @@ Util.augment(Line,{
       lineShape,
       path = '';
 
-    if(!animate){
+    if(!animate || !Util.svg){
       drawLine();
       after();
     }else{

@@ -598,8 +598,11 @@ Util.augment(Pie,{
     var _self = this,
       points = _self.getVisiblePoints(),
       visible = false;
+
+    point.index = index;
+
     Util.each(points,function(item){
-      if(point.xValue == item.xValue){
+      if(point.index == item.index || point == item){
         visible = true;
       }
     });
@@ -638,7 +641,7 @@ Util.augment(Pie,{
       rst = {};
 
     Util.each(points,function(item,index){
-      if(point.xValue == item.xValue){
+      if(point.index == item.index || point == item){
         curIndex = index;
       }
     });
@@ -850,7 +853,7 @@ Util.augment(Pie,{
   //覆写清空
   remove : function(){
     this.removeLegend();
-    AGroup.superclass.remove.call(this);
+    Pie.superclass.remove.call(this);
   }
 });
 

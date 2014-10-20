@@ -163,22 +163,26 @@ Util.augment(Cartesian,{
    * @param  {Function} callback 回调
    */
   animateClip : function(fn,callback){
-    var _self = this,
-      canvas = _self.get('canvas'),
-      invert = _self.get('invert'),
-      width = canvas.get('width'),
-      duration = _self.get('duration'),
-      height = canvas.get('height'),
-      clip =  invert ? '0,0,' + width + ',0' : '0,0,0,' + height;
+    if(Util.svg){
+      var _self = this,
+        canvas = _self.get('canvas'),
+        invert = _self.get('invert'),
+        width = canvas.get('width'),
+        duration = _self.get('duration'),
+        height = canvas.get('height'),
+        clip =  invert ? '0,0,' + width + ',0' : '0,0,0,' + height;
 
-    _self.attr('clip-rect',clip);
-    fn && fn();
-    _self.animate({
-      'clip-rect' : '0,0,' + width + ','+height
-    },duration,function(){
+      _self.attr('clip-rect',clip);
+      fn && fn();
+      _self.animate({
+        'clip-rect' : '0,0,' + width + ','+height
+      },duration,function(){
+        callback && callback();
+        _self.attr('clip-rect','');
+      }); 
+    }else{
       callback && callback();
-      _self.attr('clip-rect','');
-    }); 
+    }
   },
   /**
    * @protected

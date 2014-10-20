@@ -41,21 +41,22 @@ describe('测试序列生成',function(){
     innerSize : '60%',
     colors : [ '#5e90c9','#1c2d3f','#a9d052','#a12d2d','#43bbb4','#5a2a94','#fabe3c','#2279dc','#e360e5','#48000c'],
     data: [
-      ['Firefox',   45.0],
-      ['IE',       26.8],
+      ['a',   45.0],
+      ['a',       26.8],
       {
           name: 'Chrome',
           y: 12.8
       },
-      ['Safari',    8.5],
-      ['Opera',     6.2],
-      ['Others',   0.7]
+      ['a',    8.5],
+      ['a',     6.2],
+      ['a',   0.7]
     ]
   });
 
   pie.paint();
 
   var itemGroup = pie.get('group');
+/**/
 
 
   describe('测试环图生成',function(){
@@ -100,10 +101,9 @@ describe('测试序列生成',function(){
       expect(itemGroup.getCount()).to.be(2);
     });
 
-    it('移除',function(){
+    xit('移除',function(){
       pie.remove();
       expect(itemGroup.get('children')).to.be(undefined);
     })
   });
-
 });
