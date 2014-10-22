@@ -285,12 +285,15 @@ Util.augment(Pie,{
   },
   changeData : function(data,redraw){
     var _self = this,
-    curanimate = _self.get('animate');
+    curanimate = _self.get('animate'),
+    group;
+    /**/
     if(redraw){
-      _self.get('group').clear();
+      group = _self.get('group');
+      group && group.clear();
       _self.set('animate',false);
     }
-   
+    
     Pie.superclass.changeData.call(this,data,redraw);
     if(redraw && _self.get('legend')){
       _self.resetLegendItems();
@@ -710,7 +713,6 @@ Util.augment(Pie,{
       if(isPre){
         curStart = preStart + (startAngle - preStart) * factor;
         curEnd = preEnd + (endAngle - preEnd) * factor
-        
       }else{
         curStart = preStart - (preStart - startAngle) * factor;
         curEnd = preEnd - (preEnd - endAngle) * factor;

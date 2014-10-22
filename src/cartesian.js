@@ -56,6 +56,12 @@ Cartesian.ATTRS = {
    */
   yAxis : null,
 
+  /**
+   * 数据改变时，是否重绘整个图表，一般发生在影响坐标轴时
+   * @type {Boolean}
+   */
+  effectChart : true,
+
   invert : false,
   
   pointsCache : {}

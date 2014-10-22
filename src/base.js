@@ -106,7 +106,13 @@ Series.ATTRS = {
    * @protected
    * @type {String}
    */
-  groupName : 'series'
+  groupName : 'series',
+
+  /**
+   * 数据改变时，是否重绘整个图表，一般发生在影响坐标轴时
+   * @type {Boolean}
+   */
+  effectChart : false,
 
   /**
    * @event beforepaint
@@ -173,7 +179,7 @@ Util.augment(Series,{
       _self.set('data',data);
     }
     if(redraw){
-      if(parent && parent.repaint){
+      if(_self.get('effectChart') && parent && parent.repaint){
         parent.repaint();
       }else if(_self.get('visible')){
         _self.repaint();
@@ -377,7 +383,13 @@ Util.augment(Series,{
     var _self = this,
       points = _self.get('points'),
       rst,
-      last;
+      first = points[0],
+      next,
+      last = points[points.length - 1];
+
+    if(Util.isNumber(value) && value > last.xValue || value < first.xValue){
+      return null;
+    }
 
     Util.each(points,function(point,index){
 
@@ -389,6 +401,7 @@ Util.augment(Series,{
         next = points[index + 1];
       }
     });
+    
     if(last && next){ //计算最逼近的
       if(Math.abs(last.xValue - value) > Math.abs(next.xValue - value)){
         last = next;
@@ -423,9 +436,9 @@ Util.augment(Series,{
     _self.set('painting',true);//正在绘制，防止再绘制过程中触发重绘
     _self.fire('beforepaint');
     _self.draw(points,function(){
-      _self.sort();
       _self.fire('afterpaint');
     });
+    _self.sort();
     _self.set('isPaint',true);
     _self.set('painting',false);
   },
