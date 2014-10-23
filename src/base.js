@@ -387,7 +387,7 @@ Util.augment(Series,{
       next,
       last = points[points.length - 1];
 
-    if(Util.isNumber(value) && value > last.xValue || value < first.xValue){
+    if(Util.isNumber(value) && (value > last.xValue || value < first.xValue)){
       return null;
     }
 
@@ -457,6 +457,7 @@ Util.augment(Series,{
       return;
     }
 
+    _self.set('repainting',true);//正在绘制，防止再绘制过程中触发重绘
     
     points = _self.getPoints();
 
@@ -484,6 +485,7 @@ Util.augment(Series,{
 
     _self._changeMarkers();
     _self._changeLabels();
+    _self.set('repainting',false);
   },
   /**
    * @protected

@@ -223,6 +223,10 @@ Pie.ATTRS = {
     'stroke': '#fff'
   },
 
+  visibleCache : {
+
+  },
+
   cancelSelect : true,
   
   xField : 'name',
@@ -274,8 +278,9 @@ Util.augment(Pie,{
    */
   changeShapes : function(points,animate){
     var _self = this;
-    this.set('visiblePoints',null);
-    //
+
+    points = points || _self.getPoints();
+    
     Util.each(points,function(point,index){
       _self.formatPoint(point,index);
     });
@@ -283,21 +288,12 @@ Util.augment(Pie,{
     _self.changePoints(points);
 
   },
-  changeData : function(data,redraw){
-    var _self = this,
-    curanimate = _self.get('animate'),
-    group;
-    /**/
-    if(redraw){
-      group = _self.get('group');
-      group && group.clear();
-      _self.set('animate',false);
-    }
-    
-    Pie.superclass.changeData.call(this,data,redraw);
-    if(redraw && _self.get('legend')){
+  repaint : function(){
+    var _self = this;
+    Pie.superclass.repaint.call(this);
+
+    if(_self.get('legend')){
       _self.resetLegendItems();
-      _self.set('animate',curanimate);
     }
   },
   //处理labels
@@ -671,7 +667,7 @@ Util.augment(Pie,{
 
     
     //未渲染，则调用初始化时的点信息
-    if(!_self.get('isPaint') || items.length == 0){
+    if(!_self.get('isPaint') || items.length == 0 || _self.get('repainting')){
       return _self.getPoints();
     }
 
@@ -844,13 +840,21 @@ Util.augment(Pie,{
     }
     item.set('selected',selected);
   },
+  _onVisibleChange : function(){
+    var _self = this;
+    _self.set('points',null);
+    this.set('visiblePoints',null);
+    this.changeShapes();
+    _self.resetLabels();
+  },
   showChild : function(item){
     Pie.superclass.showChild.call(this,item);
-    this.repaint();
+    this._onVisibleChange();
   },
   hideChild : function(item){
     Pie.superclass.hideChild.call(this,item);
-    this.repaint();
+    this._onVisibleChange();
+
   },
   //覆写清空
   remove : function(){

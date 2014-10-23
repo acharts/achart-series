@@ -9,7 +9,7 @@ var Canvas = require('achart-canvas'),
 
   $('<div id="p1"></div>').prependTo('body');
 
-
+/*
 describe('测试序列生成',function(){
 
   var canvas = new Canvas({
@@ -241,7 +241,7 @@ describe('测试序列生成',function(){
 
 });
 
-
+*/
 describe('测试legend',function(){
 
   var canvas = new Canvas({
@@ -321,6 +321,23 @@ describe('测试legend',function(){
         done();
       },1000);
     });
+/*
+    
+*/
+    it('数据发生改变,不直接重绘',function(done){
+      setTimeout(function(){
+        var data = [
+          ['Safari',    8.5],
+          ['Opera',     6.2],
+          ['Firefox',   45.0],
+          ['IE',       26.8],
+          ['Others',   0.7]
+        ];
+        pie.changeData(data,false);
+        pie.repaint();
+        done();
+      },1000);
+    });
 
     it('数据发生改变',function(done){
       setTimeout(function(){
@@ -331,8 +348,9 @@ describe('测试legend',function(){
         ];
         pie.changeData(data,true);
         done();
-      },1000);
+      },1200);
     });
   });
+/*
+*/
 });
-/**/
