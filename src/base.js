@@ -387,6 +387,9 @@ Util.augment(Series,{
       next,
       last = points[points.length - 1];
 
+    if(!first){
+      return null;
+    }
     if(Util.isNumber(value) && (value > last.xValue || value < first.xValue)){
       return null;
     }

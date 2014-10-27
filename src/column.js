@@ -69,6 +69,12 @@ Column.ATTRS = {
    * @type {Number}
    */
   columnWidth : null,
+
+  /**
+   * 是否自动计算宽度，此属性设置成true后，columnWidth 不再生效
+   * @type {Boolean}
+   */
+  autoWidth : true,
   /**
    * 自动计算得出
    * @type {Object}
@@ -162,6 +168,9 @@ Util.augment(Column,{
   },
   //重置宽度
   resetWidth : function(){
+    if(!this.get('autoWidth')){
+      return;
+    }
     if(this.isInCircle()){
       this.resetCircleWidth();
       return ;

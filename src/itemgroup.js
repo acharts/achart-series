@@ -168,11 +168,12 @@ Util.augment(Group,{
     var count = points.length,
       length = items.length;
 
+    var last = items[items.length - 1];
     //大于现有的点
     for (var i = length; i < count; i++) {
       var shape = _self.addItem(points[i],i);
       if(length > 1 ){
-        animate && _self.animateItem(shape,items[items.length - 1].get('prePoint'));
+        animate && _self.animateItem(shape,last.get('prePoint'));
       }
       
     }
