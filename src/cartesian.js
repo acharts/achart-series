@@ -144,6 +144,9 @@ Util.augment(Cartesian,{
     if((type == 'number' || type == 'time') && _self.get('pointInterval')){
       return false;
     }
+    if(type == 'category' && !xAxis.get('autoTicks')){
+      return false;
+    }
     return true;
   },
   /**
