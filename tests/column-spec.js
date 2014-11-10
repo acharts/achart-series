@@ -146,7 +146,7 @@ describe('测试序列生成',function(){
     });
 
   });
-
+/*
   describe('operation',function(){
 
     it('change',function(done){
@@ -233,9 +233,9 @@ describe('测试序列生成',function(){
     });
     
   });
-
+*/
 });
-
+/*
 describe('手工设置宽度',function(){
 
   var canvas = new Canvas({
@@ -609,4 +609,4 @@ describe('test time axis',function(){
 
   });
 });
-
+*/

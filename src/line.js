@@ -150,8 +150,9 @@ Util.augment(Line,{
       drawLine();
       after();
     }else{
-      lineShape = _self._createLine(path);
+      
       if(_self.isInCircle()){
+        lineShape = _self._createLine(path);
         _self.circleAnimate(points,lineShape);
         after();
       }else{
@@ -160,6 +161,7 @@ Util.augment(Line,{
       
     }
 
+    _self.drawTracker(points);
     function drawLine(){
       path = _self.points2path(points);
       lineShape = _self._createLine(path);
@@ -175,7 +177,7 @@ Util.augment(Line,{
      */
     function after(){
       
-      _self.drawTracker(points);
+     
       callback && callback();
     }
     
