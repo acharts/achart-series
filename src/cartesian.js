@@ -254,9 +254,11 @@ Util.augment(Cartesian,{
     //如果是x轴，并且指定了开始节点
     if(type == 'xAxis' && (pointStart != null &&!(xAxis.get('type') == 'time' && pointStart == 0)) && _self.get('pointInterval') /*&& !(xAxis.get('type') == 'time') && pointStart == 0*/){
       var 
-        pointInterval = _self.get('pointInterval');
+        pointInterval = _self.get('pointInterval'),
+        //只有一个点,默认长度是1
+        pointCount = (data.length - 1) == 0 ? 1 : (data.length - 1);
         rst.push(pointStart);
-        rst.push(pointStart + (data.length - 1) * pointInterval);
+        rst.push(pointStart + pointCount * pointInterval);
     }else{ 
       var xField = _self.get('xField'),
         yField = _self.get('yField');
