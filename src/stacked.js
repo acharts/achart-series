@@ -83,11 +83,11 @@ Util.augment(Stacked,{
    * @protected
    * 转换显示的值，一般用于层叠的数据序列中
    */
-  parseYValue : function(value){
+  parseYValue : function(value,index){
     var _self = this,
       stackType = _self.get('stackType'),
       data = _self.get('data'),
-      index = Util.indexOf(data,value),
+      index = index == null ? Util.indexOf(data,value) : index,
       percentValue;
     if(stackType == 'percent'){
       percentValue = _self.getStackedPercent(value,index);
