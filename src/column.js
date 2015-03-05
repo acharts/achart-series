@@ -181,18 +181,29 @@ Util.augment(Column,{
       tickLength = _self._getAvgLength(),
       count,
       margin = 10,
-      width,
-      offset,
+      width = 0,
+      offset = 0,
+      isNoOffset = _self.get('isNoOffset'),
       info = _self._getIndexInfo();
-
     count = info.count;
-    curIndex = info.curIndex;
-
-    width = (tickLength/2)/count;
+    curIndex = info.curIndex; 
     margin = 1/2 * width;
-    offset = 1/2 * (tickLength - (count) * width - (count - 1) * margin) + ((curIndex + 1) * width + curIndex * margin) - 1/2 * width - 1/2 * tickLength ;
-    _self.set('columnWidth',width);
-    _self.set('columnOffset',offset)
+    
+    
+    var columnWidth = _self.get('columnWidth');
+    if( columnWidth ){
+        width = columnWidth
+        _self.set('columnWidth',columnWidth);
+    }else{
+        width = (tickLength/2)/count;
+        _self.set('columnWidth',width);
+    }
+    if( isNoOffset ){
+        offset = curIndex * width - tickLength/4;
+    }else{
+        offset = 1/2 * (tickLength - (count) * width - (count - 1) * margin) + ((curIndex + 1) * width + curIndex * margin) - 1/2 * width - 1/2 * tickLength ;
+    }
+    _self.set('columnOffset',offset);
 
   },
   _getAvgLength : function(){
