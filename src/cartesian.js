@@ -163,7 +163,7 @@ Util.augment(Cartesian,{
    * @protected
    * 转换显示的值，一般用于层叠的数据序列中
    */
-  parseYValue : function(value){
+  parseYValue : function(value,index){
     return value;
   },
   /**
@@ -293,7 +293,7 @@ Util.augment(Cartesian,{
       xName = _self.getXName(),
       yName = _self.getYName(),
       x,
-      yValue = _self.parseYValue(value),
+      yValue = _self.parseYValue(value,index),
       y = yAxis.getOffset(yValue),
       originValue,
       xValue,

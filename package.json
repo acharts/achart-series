@@ -1,6 +1,6 @@
 {
   "name": "achart-series",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "description": "series for chart. Include of line,area,column and pie.",
   "keywords": [],
   "homepage": "https://github.com/acharts/achart-series",
@@ -16,17 +16,17 @@
   "spm": {
     "main": "index.js",
     "dependencies": {
-      "achart-util" : "1.0.0",
-      "achart-actived" : "1.0.0",
-      "achart-labels" : "1.0.0",
-      "achart-markers" : "1.0.0",
-      "achart-plot" : "1.0.0",
-      "achart-legend" : "1.0.1"
+      "achart-util" : "~1.1.0",
+      "achart-actived" : "~1.0.2",
+      "achart-labels" : "~1.0.3",
+      "achart-markers" : "~1.0.2",
+      "achart-plot" : "~1.1.1",
+      "achart-legend" : "~1.0.2"
     },
     "devDependencies": {
       "expect.js": "0.3.1",
-      "achart-canvas" : "1.0.0",
-      "achart-axis" : "1.0.0",
+      "achart-canvas" : "~1.1.1",
+      "achart-axis" : "~1.1.3",
       "sinon" : "1.6.0",
       "event-simulate" : "1.0.0",
       "jquery" : "1.9.1"

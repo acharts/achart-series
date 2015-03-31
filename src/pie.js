@@ -76,6 +76,7 @@ function alignLables(center,r,arr,endAngle,factor,lineHeight){
     leftCount,
     preAvg = 0,
     preConflictIndex;
+  
   //查找第一个容放不下后面节点的位置
   for (var i = 0; i < length; i++) {
     var label = arr[i],
@@ -90,7 +91,9 @@ function alignLables(center,r,arr,endAngle,factor,lineHeight){
     conflictIndex = i;
     
     if(leftAvg < lineHeight){
-      conflictIndex = i + 1;
+      if(conflictIndex != 0){
+        conflictIndex = i + 1;
+      }
       break;
     }
     if(preAvg > 0 && preAvg < lineHeight){
@@ -105,8 +108,8 @@ function alignLables(center,r,arr,endAngle,factor,lineHeight){
     }
   }
 
-  if(conflictIndex && conflictIndex < length - 1){ //说明存在冲突，因为已经调整过，所以conflictIndex > 0
-    var start = conflictIndex - 1,
+  if(/*conflictIndex && */conflictIndex < length - 1){ //说明存在冲突，因为已经调整过，所以conflictIndex > 0
+    var start = conflictIndex == 0 ? 0 : conflictIndex - 1,
       startLabel = arr[start],
       y =  startLabel.y, //start == 0 ? (factor > 0 ? minY : maxY) :
       endY = factor > 0 ? maxY : minY;

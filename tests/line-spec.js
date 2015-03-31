@@ -206,7 +206,7 @@ describe('测试序列生成',function(){
     });
 
   });
-  
+ 
   describe('测试自定义折线',function(){
 
     it('测试线上的点',function(){
@@ -327,7 +327,6 @@ describe('测试序列生成',function(){
       },800);
     });
   });
-  
 });
 
 
@@ -631,5 +630,6 @@ describe('time axis',function(){
 
   
 });
+
 /*
 */
