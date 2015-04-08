@@ -37,7 +37,7 @@ Line.ATTRS = {
   type : 'line',
   elCls : 'x-chart-line-series',
   /**
-   * 是否忽略null的值，连接null2边的值
+   * 是否忽略null的值，连接null两边的值
    * @type {Boolean}
    */
   connectNulls : false,  
@@ -62,7 +62,10 @@ Line.ATTRS = {
    * @type {Boolean}
    */
   smooth : false,
-  
+  /**
+   * legend的类型
+   * @type {String}
+   */
   legendType : 'line'
 };
 
@@ -152,6 +155,19 @@ Util.augment(Line,{
     }else{
       
       if(_self.isInCircle()){
+        var circle = _self.getCircle(),
+        center = circle.getCenter(),
+        baseValue = _self.getBaseValue();
+        //防止遮盖
+        var initPoints = [];
+        Util.each(points,function(point){
+          var item = Util.mix({
+            value : baseValue
+          },center);
+          initPoints.push(item);
+        });
+        _self.drawInner(initPoints);
+
         lineShape = _self._createLine(path);
         _self.circleAnimate(points,lineShape);
         after();
@@ -164,13 +180,11 @@ Util.augment(Line,{
     _self.drawTracker(points);
     function drawLine(){
       path = _self.points2path(points);
+      _self.drawInner(points);
       lineShape = _self._createLine(path);
       Util.each(points,function(point){
         _self._drawPoint(point);
       });
-
-      _self.drawInner(points);
-      
     }
     /**
      * @private
@@ -201,7 +215,6 @@ Util.augment(Line,{
     });
     path = _self.points2path(initPoints);
     lineShape.attr('path',path);
-    _self.drawInner(initPoints);
 
     _self.repaint();
 

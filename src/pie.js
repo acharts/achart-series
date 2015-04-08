@@ -158,6 +158,7 @@ var RAD = Math.PI / 180,
  * @extends Chart.Series
  * @mixins Chart.Series.ItemGroup
  * @mixins Chart.Actived.Group
+ * @mixins Chart.Legend.UseLegend
  */
 var Pie = function(cfg){
   Pie.superclass.constructor.call(this,cfg);
@@ -229,12 +230,25 @@ Pie.ATTRS = {
   visibleCache : {
 
   },
+  /**
+   * 为饼图绘制一个外边框
+   * @type {Object}
+   */
+  borderCircle: null,
 
   cancelSelect : true,
   
   xField : 'name',
   stickyTracking : false,
+  /**
+   * 创建序列时是否触发动画
+   * @type {Boolean}
+   */
   animate :  true,
+  /**
+   * 生成时动画的时间间隔
+   * @type {Number}
+   */
   duration : 1000
 };
 
@@ -245,7 +259,6 @@ Util.mixin(Pie,[ItemGroup,ActiveGroup,Legend.UseLegend]);
 Util.augment(Pie,{
 
   draw : function(points){
-
     var _self = this,
       selectedPoint;
     Util.each(points,function(point,index){
@@ -259,6 +272,10 @@ Util.augment(Pie,{
       _self.animateItems(after);
     }else{
       after();
+    }
+    //饼图线框
+    if(_self.get('borderCircle')){
+      _self.drawBorderCircle();
     }
     if(_self.get('labelsGroup')){
       _self.processLabels(points);
@@ -274,6 +291,30 @@ Util.augment(Pie,{
       this.renderLegend();  
     }
    
+  },
+  drawBorderCircle: function(){
+    var _self = this;
+    var center = _self.getCenter();
+    var borderCircle = _self.get('borderCircle');
+    var distance = (borderCircle.distance || 10);
+    var radius = _self.get('radius');
+    var innerRadius = _self.get('innerRadius');
+    //添加外圆圈
+    var cfg = Util.mix({
+      cx: center.x,
+      cy: center.y,
+      r: radius + distance
+    },borderCircle);
+    _self.addShape('circle',cfg);
+    //添加内圆圈
+    if(innerRadius && innerRadius - distance > 0){
+      var cfg = Util.mix({
+        cx: center.x,
+        cy: center.y,
+        r: innerRadius - distance
+      },borderCircle);
+      _self.addShape('circle',cfg);
+    }
   },
   /**
    * @protected

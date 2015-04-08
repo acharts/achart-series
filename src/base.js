@@ -40,6 +40,17 @@ Series.ATTRS = {
   /**
    * 显示对应点的文本的配置项
    * @type {Chart.Labels}
+   * <pre><code>
+   * {
+   *   label : {
+   *     font : '20px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif',
+   *     stroke : '#333',
+   *     x : 10,
+   *     y : 10,
+   *     rotate : 90
+   *   }
+   * }
+   * </code></pre>
    */
   labels : null,
   /**
@@ -97,7 +108,7 @@ Series.ATTRS = {
    */
   itemName : 'seriesItem',
   /**
-   * 显示legend的类型，默认是矩形
+   * 显示legend的类型，默认是rect
    * @type {String}
    */
   legendType : 'rect',

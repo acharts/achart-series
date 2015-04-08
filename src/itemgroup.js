@@ -22,7 +22,8 @@ function removeLabel(label){
  * 
  *  - <a href="http://spmjs.io/docs/achart-series/api/itemgroup.html" target="_blank">文档</a>
  *  - <a href="http://spmjs.io/docs/achart-series/wiki/08-itemgroup.html" target="_blank">wiki</a>
- *  
+ * @extends Chart.Series
+ * @private
  */
 var Group = function(){
 

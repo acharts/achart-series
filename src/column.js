@@ -53,6 +53,8 @@ function getPiePath (startAngle, endAngle,r,ir,circle) {
  *  
  * @extends Chart.Series.Cartesian
  * @mixins Chart.Series.ItemGroup
+ * @mixins Chart.Series.Stacked
+ * @mixins Chart.Actived.Group
  */
 var Column = function(cfg){
   Column.superclass.constructor.call(this,cfg);
@@ -90,9 +92,21 @@ Column.ATTRS = {
    * @type {Object}
    */
   stackPadding : 1,
+  /**
+   * 创建序列时是否触发动画
+   * @type {Boolean}
+   */
   animate : true,
+  /**
+   * 生成时动画的时间间隔
+   * @type {Number}
+   */
   duration : 1000,
-  
+  /**
+   * 是否需要激活的高亮效果
+   * @type {Boolean}
+   */
+  columnActive: true,
   item : {
     'stroke': 'none',
     'stroke-width': 1,
@@ -280,13 +294,14 @@ Util.augment(Column,{
   setItemActived : function(item,actived){
     var _self = this,
       color = item.getCfgAttr('attrs').fill;
-
-    if(actived){
-      item.attr('fill',highlight(color,0.2));
-      item.set('actived',true);
-    }else{
-      item.attr('fill',color);
-      item.set('actived',false);
+    if(_self.get('columnActive')){
+      if(actived){
+        item.attr('fill',highlight(color,0.2));
+        item.set('actived',true);
+      }else{
+        item.attr('fill',color);
+        item.set('actived',false);
+      }
     }
   },
   /**

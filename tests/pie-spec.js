@@ -258,7 +258,12 @@ describe('测试legend',function(){
 
   var pie = group.addGroup(Series,{
     autoPaint : false,
-    allowPointSelect : true,
+    //allowPointSelect : true,
+    borderCircle:{
+      stroke: '#efefef',
+      'stroke-width': 1,
+      distance: 15
+    },
     legend : {
       layout : 'vertical',
       align : 'right'
@@ -275,15 +280,15 @@ describe('测试legend',function(){
     },
     name: 'Browser share',
     animate : true,
-    colors : [ '#5e90c9','#1c2d3f','#a9d052','#a12d2d','#43bbb4','#5a2a94','#fabe3c','#2279dc','#e360e5','#48000c'],
+    colors : [ '#f9c35a','#89ce6d','#b4e9fc'],
     data: [
       ['Firefox',   45.0],
       ['IE',       26.8],
       {
           name: 'Chrome',
-          y: 12.8,
-          sliced: true,
-          selected: true
+          y: 12.8//,
+          //sliced: true,
+          //selected: true
       },
       ['Safari',    8.5],
       ['Opera',     6.2],

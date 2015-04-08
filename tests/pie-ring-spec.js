@@ -25,7 +25,7 @@ describe('测试序列生成',function(){
 
   var pie = group.addGroup(Series,{
     autoPaint : false,
-    allowPointSelect : true,
+    //allowPointSelect : true,
     labels : {
       distance : 40,
       label : {
@@ -36,10 +36,15 @@ describe('测试序列生成',function(){
           return value + ' ' + (item.point.percent * 100).toFixed(2)  + '%'; 
       }
     },
+    borderCircle:{
+      stroke: '#efefef',
+      'stroke-width': 1,
+      distance: 15
+    },
     name: 'Browser share',
     animate : true,
     innerSize : '60%',
-    colors : [ '#5e90c9','#1c2d3f','#a9d052','#a12d2d','#43bbb4','#5a2a94','#fabe3c','#2279dc','#e360e5','#48000c'],
+    colors : [ '#f9c35a','#89ce6d','#b4e9fc'],
     data: [
       ['a',   45.0],
       ['a',       26.8],

@@ -29,6 +29,7 @@ var
  *  - <a href="http://spmjs.io/docs/achart-series/wiki/02-cartesian.html" target="_blank">wiki</a>
  *  
  * @extends Chart.Series
+ * @private
  */
 function Cartesian(cfg){
   Cartesian.superclass.constructor.call(this,cfg);
@@ -48,6 +49,17 @@ Cartesian.ATTRS = {
   /**
    * x坐标轴
    * @type {Chart.Axis}
+   * <pre><code>
+   * {
+   *   type : 'number' //指定坐标轴为数字类型
+   *   line : null, //去掉坐标轴标线
+   *   tickLine : null,//去掉坐标轴的tick
+   *   title : { //为坐标轴加一个标题
+   *     text : 'x轴',
+   *     y : 40
+   *   }
+   * }
+   * </code></pre>
    */
   xAxis : null,
   /**

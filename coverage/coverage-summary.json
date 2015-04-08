@@ -1,0 +1,4 @@
+{
+"/Users/zhenyi/Documents/git/achart-series/src/base.js":{"lines":{"total":173,"covered":87,"skipped":0,"pct":50.29},"statements":{"total":173,"covered":87,"skipped":0,"pct":50.29},"functions":{"total":39,"covered":17,"skipped":0,"pct":43.59},"branches":{"total":114,"covered":30,"skipped":0,"pct":26.32}},
+"/Users/zhenyi/Documents/git/achart-series/src/itemgroup.js":{"lines":{"total":104,"covered":67,"skipped":0,"pct":64.42},"statements":{"total":104,"covered":67,"skipped":0,"pct":64.42},"functions":{"total":25,"covered":15,"skipped":0,"pct":60},"branches":{"total":58,"covered":28,"skipped":0,"pct":48.28}},
+"/Users/zhenyi/Documents/git/achart-series/src/pie.js":{"lines":{"total":337,"covered":281,"skipped":0,"pct":83.38},"statements":{"total":337,"covered":281,"skipped":0,"pct":83.38},"functions":{"total":55,"covered":47,"skipped":0,"pct":85.45},"branches":{"total":182,"covered":126,"skipped":0,"pct":69.23}}}

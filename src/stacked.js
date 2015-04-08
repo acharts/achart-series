@@ -8,7 +8,7 @@ var Util = require('achart-util');
 
 /**
  * @class Chart.Series.Stacked
- * @protected
+ * @private
  * 此类是一个扩展，不应该直接实例化,主要用于区域图，柱状图层叠的场景
  *
  *  - <a href="http://spmjs.io/docs/achart-series/latest/api/stacked.html" target="_blank">文档</a>
