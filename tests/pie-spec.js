@@ -280,7 +280,7 @@ describe('测试legend',function(){
     },
     name: 'Browser share',
     animate : true,
-    colors : [ '#f9c35a','#89ce6d','#b4e9fc'],
+    colors : [ '#fff','#89ce6d','#b4e9fc'],
     data: [
       ['Firefox',   45.0],
       ['IE',       26.8],

@@ -529,10 +529,12 @@ Util.augment(Pie,{
       return;
     }
     if(actived){
-      item.attr({fill : Util.highlight(color,.1)});
+      //item.attr({fill : Util.highlight(color,.1)});
+      item.attr({opacity: 0.8});
       item.set('actived',true);
     }else{
-      item.attr({fill : color});
+      item.attr({opacity: 1});
+      //item.attr({fill : color});
       item.set('actived',false);
     }
   },
