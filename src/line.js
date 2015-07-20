@@ -280,6 +280,13 @@ Util.augment(Line,{
       smooth = false;
     }
 
+    var smoothType = _self.get('smoothProtect');
+    if(smoothType) {
+      window.top.__ACharts__smoothProtect = true;
+    } else {
+      window.top.__ACharts__smoothProtect = false;
+    }
+
     Util.each(points,function(item,index){
       if(item.value == null){
         if(connectNulls){
