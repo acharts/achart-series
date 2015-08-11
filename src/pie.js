@@ -3,7 +3,7 @@
  * @ignore
  */
 
-var 
+var
   ItemGroup = require('./itemgroup'),
   ActiveGroup = require('achart-actived').Group,
   Util = require('achart-util'),
@@ -76,7 +76,7 @@ function alignLables(center,r,arr,endAngle,factor,lineHeight){
     leftCount,
     preAvg = 0,
     preConflictIndex;
-  
+
   //查找第一个容放不下后面节点的位置
   for (var i = 0; i < length; i++) {
     var label = arr[i],
@@ -89,7 +89,7 @@ function alignLables(center,r,arr,endAngle,factor,lineHeight){
       preAvg = factor > 0 ? (y - minY)/i : (maxY - y)/i;
     }
     conflictIndex = i;
-    
+
     if(leftAvg < lineHeight){
       if(conflictIndex != 0){
         conflictIndex = i + 1;
@@ -123,7 +123,7 @@ function alignLables(center,r,arr,endAngle,factor,lineHeight){
     for (var i = length - 1; i >= start; i--) {
       var h = (length - 1 - i) * leftAvg;
       resetItem(arr[i],h,endAngle,r,center);
-     
+
     };
 
     var startY = factor > 0 ? minY : maxY,
@@ -139,7 +139,7 @@ function alignLables(center,r,arr,endAngle,factor,lineHeight){
         resetItem(arr[i],h,endAngle,r,center);
       }
     }
-    
+
   }
 
 }
@@ -151,10 +151,10 @@ var RAD = Math.PI / 180,
 /**
  * @class Chart.Series.Pie
  * 饼图数据序列
- * 
+ *
  *  - <a href="http://spmjs.io/docs/achart-series/#pie" target="_blank">文档</a>
  *  - <a href="http://spmjs.io/docs/achart-series/wiki/06-pie.html" target="_blank">wiki</a>
- * 
+ *
  * @extends Chart.Series
  * @mixins Chart.Series.ItemGroup
  * @mixins Chart.Actived.Group
@@ -237,7 +237,7 @@ Pie.ATTRS = {
   borderCircle: null,
 
   cancelSelect : true,
-  
+
   xField : 'name',
   stickyTracking : false,
   /**
@@ -288,9 +288,9 @@ Util.augment(Pie,{
       }
     }
     if(!this.get('legedGroup')){
-      this.renderLegend();  
+      this.renderLegend();
     }
-   
+
   },
   drawBorderCircle: function(){
     var _self = this;
@@ -324,7 +324,7 @@ Util.augment(Pie,{
     var _self = this;
 
     points = points || _self.getPoints();
-    
+
     Util.each(points,function(point,index){
       _self.formatPoint(point,index);
     });
@@ -368,7 +368,7 @@ Util.augment(Pie,{
           }
         }
       }
-      
+
     });
     if(leftArray.length){
       var end;
@@ -391,7 +391,7 @@ Util.augment(Pie,{
         labelLine && _self.lineToLabel(label,r,distance);
       });
     }
-    
+
   },
   //覆写 getLengendItems 方法
   getLengendItems : function(){
@@ -408,7 +408,6 @@ Util.augment(Pie,{
       };
       items.push(item);
     });
-
     return items;
   },
   /**
@@ -464,7 +463,7 @@ Util.augment(Pie,{
     Pie.superclass.bindUI.call(this);
     this.bindItemClick();
   },
- 
+
   //鼠标移动
   bindMouseOver : function(){
     var _self = this;
@@ -522,7 +521,7 @@ Util.augment(Pie,{
   },
   //设置激活状态
   setItemActived : function(item,actived){
-    
+
     var _self = this,
       color = item.getCfgAttr('attrs').fill || item.getCfgAttr('attrs').color;
     if(_self.isPlaceHolder(item)){
@@ -595,7 +594,7 @@ Util.augment(Pie,{
     if(!centerPoint){
       centerPoint = {};
       center = _self.get('center');
-      
+
       centerPoint.x = ensureX(_self,center[0]);
       centerPoint.y = ensureY(_self,center[1]);
       _self.set('centerPoint',centerPoint);
@@ -698,7 +697,7 @@ Util.augment(Pie,{
         }
         total += item.value;
       //}
-      
+
     });
 
     rst.percent = point.value / total;
@@ -711,7 +710,7 @@ Util.augment(Pie,{
       points = [],
       items = _self.getItems();;
 
-    
+
     //未渲染，则调用初始化时的点信息
     if(!_self.get('isPaint') || items.length == 0 || _self.get('repainting')){
       return _self.getPoints();
@@ -721,7 +720,7 @@ Util.augment(Pie,{
     if(visiblePoints){
       return visiblePoints;
     }
-    
+
     Util.each(items,function(item){
       if(item.get('visible')){
         points.push(item.get('point'));
@@ -760,7 +759,7 @@ Util.augment(Pie,{
         curEnd = preEnd - (preEnd - endAngle) * factor;
       }
       path = _self._getPiePath(curStart,curEnd);
-     
+
       item.attr('path',path);
       if(_self.isSelected(item)){
         var offset = _self._getOffset(curStart,curEnd,10);
@@ -791,7 +790,7 @@ Util.augment(Pie,{
   _getPiePath : function(startAngle, endAngle) {
     var _self = this,
       center = _self.getCenter(),
-      
+
       path,
       cx = center.x,
       cy = center.y,
@@ -853,7 +852,7 @@ Util.augment(Pie,{
     }else{
       middleAngle = startAngle + (endAngle - startAngle)/2;
     }
-   
+
     rst.x = distance * Math.cos(middleAngle * RAD);
     rst.y = distance * Math.sin(middleAngle * RAD);
     return rst;
