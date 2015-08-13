@@ -290,7 +290,6 @@ Util.augment(Pie,{
     if(!this.get('legedGroup')){
       this.renderLegend();
     }
-
   },
   drawBorderCircle: function(){
     var _self = this;
@@ -399,12 +398,15 @@ Util.augment(Pie,{
       children = _self.getItems(),
       legendType = _self.get('legendType') || 'rect',
       items = [];
+    var points = _self.get('points');
+    //console.log(children,this.get('points'));
     Util.each(children,function(child,i){
       var item = {
         name : child.get('point').xValue,
         color : child.attr('fill'),
         type : legendType,
-        item : child
+        item : child,
+        point : points[i]
       };
       items.push(item);
     });
