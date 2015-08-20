@@ -3,7 +3,7 @@ var expect = require('expect.js'),
     PlotRange = require('achart-plot').Range,
     Simulate = require('event-simulate'),
     $ = require('jquery');
-    
+
 var Canvas = require('achart-canvas'),
   Series = require('../src/pie')
 
@@ -33,8 +33,8 @@ describe('测试序列生成',function(){
 
       },
       renderer : function(value,item){
-          
-          return value + ' ' + (item.point.percent * 100).toFixed(2)  + '%'; 
+
+          return value + ' ' + (item.point.percent * 100).toFixed(2)  + '%';
       }
     },
     name: 'Browser share',
@@ -68,7 +68,7 @@ describe('测试序列生成',function(){
         expect(pie.get('node')).not.to.be(undefined);
         done();
       },1000);
-      
+
     });
     it('生成label',function(){
       var labels = pie.get('labelsGroup');
@@ -88,7 +88,7 @@ describe('测试序列生成',function(){
     it('点击其他',function(done){
       var first = pie.getItems()[0],
         second = pie.getItems()[1];
-    
+
       Simulate.simulate(second.get('node'),'click');
       setTimeout(function(){
         expect(first.get('selected')).to.be(false);
@@ -111,7 +111,7 @@ describe('测试序列生成',function(){
 
   describe('测试触发的事件',function(){
     var items = pie.getItems(),
-    
+
     unActiveFn = sinon.spy();
 
     it('触发actived',function(done){
@@ -130,7 +130,7 @@ describe('测试序列生成',function(){
         pie.off('itemactived',callback);
         done();
       },500);
-      
+
     });
     it('触发unactived',function(done){
       var first = items[0],
@@ -227,7 +227,7 @@ describe('测试序列生成',function(){
       },800);
 
     });
-    
+
     it('add',function(done){
       var count = itemGroup.getCount();
 
@@ -266,7 +266,11 @@ describe('测试legend',function(){
     },
     legend : {
       layout : 'vertical',
-      align : 'right'
+      align : 'right',
+      formatter: function(text,point){
+        var _self = this;
+        return text + ' ' + point.value + '万(' + (point.percent * 100).toFixed(2)  + '%)';
+      }
     },
     labels : {
       distance : 40,
@@ -274,8 +278,8 @@ describe('测试legend',function(){
 
       },
       renderer : function(value,item){
-          
-          return value + ' ' + (item.point.percent * 100).toFixed(2)  + '%'; 
+
+          return value + ' ' + (item.point.percent * 100).toFixed(2)  + '%';
       }
     },
     name: 'Browser share',
@@ -315,7 +319,7 @@ describe('测试legend',function(){
         expect(itemGroup.getFirst().get('visible')).to.be(false);
         done();
       },1000);
-      
+
     });
 
     it('点击legend,显示对应项',function(done){
@@ -327,7 +331,7 @@ describe('测试legend',function(){
       },1000);
     });
 /*
-    
+
 */
     it('数据发生改变,不直接重绘',function(done){
       setTimeout(function(){
