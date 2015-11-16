@@ -436,6 +436,10 @@ Util.augment(Pie,{
       lineGroup = _self.get('lineGroup'),
       path = [];
 
+    if(isNaN(angle)){
+      return;
+    }
+
     if(label.angle == -90){
       distance = distance - lineHeight/2;
     }
